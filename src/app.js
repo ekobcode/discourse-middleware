@@ -4,7 +4,16 @@ const routes = require("./routes");
 
 const app = express();
 
-app.use(express.json({ limit: "5mb" }));
+// ✅ SATU KALI SAJA express.json
+app.use(
+  express.json({
+    limit: "5mb",
+    verify: (req, res, buf) => {
+      req.rawBody = buf; // Buffer untuk signature
+    }
+  })
+);
+
 app.use(routes);
 
-module.exports = app; // ⬅️ WAJIB ADA
+module.exports = app; // ✅ SUDAH BENAR

@@ -10,15 +10,20 @@ module.exports = function discourseSignatureMiddleware(req, res, next) {
     });
   }
 
+  if (!req.rawBody) {
+    console.error("[Discourse] rawBody missing");
+    return res.status(400).json({
+      error: "raw_body_missing"
+    });
+  }
+
   const secret = process.env.DISCOURSE_WEBHOOK_SECRET;
   if (!secret) {
-    console.error("[Discourse] secret not configured");
     return res.status(500).json({
       error: "server_misconfigured"
     });
   }
 
-  // Format: sha256=xxxx
   const [algo, signature] = signatureHeader.split("=");
 
   if (algo !== "sha256" || !signature) {
@@ -29,19 +34,19 @@ module.exports = function discourseSignatureMiddleware(req, res, next) {
 
   const computedSignature = crypto
     .createHmac("sha256", secret)
-    .update(req.rawBody)
+    .update(req.rawBody) // ✅ sekarang Buffer
     .digest("hex");
 
-  if (
-    !crypto.timingSafeEqual(
-      Buffer.from(signature),
-      Buffer.from(computedSignature)
-    )
-  ) {
+  const isValid = crypto.timingSafeEqual(
+    Buffer.from(signature),
+    Buffer.from(computedSignature)
+  );
+
+  if (!isValid) {
     return res.status(401).json({
       error: "invalid_discourse_signature"
     });
   }
 
-  next(); // ✅ signature valid
+  next();
 };
