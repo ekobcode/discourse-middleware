@@ -7,7 +7,7 @@ class WebhookService {
       payload?.event_type ||
       "unknown";
 
-    await webhookRepository.save({
+    await webhookRepository.saveDiscourseWebhook({
       eventType,
       headers,
       payload

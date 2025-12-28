@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  discourse-middleware:
+    image: discourse-middleware:${RELEASE}
+    container_name: discourse-middleware
+    ports:
+      - "127.0.0.1:9002:3000"
+    environment:
+      PORT: 3000
+      NODE_ENV: production
+      TZ: Asia/Jakarta
+      DB_HOST: postgres-db
+      DB_PORT: 5432
+      DB_USER: avanger
+      DB_PASSWORD: 'AvAngeR717#'
+      DB_NAME: discourse_webhook
+      DB_SSL: false 
+    networks:
+      - local_network
+    restart: unless-stopped
+
+networks:
+  local_network:
+    external: true

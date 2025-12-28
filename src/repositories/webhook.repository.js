@@ -1,13 +1,16 @@
-const db = require("../db/postgres");
+const { executeQuery } = require("../db/query");
 
 class WebhookRepository {
-  async save({ eventType, headers, payload }) {
-    await db.query(
-      `
+  async saveDiscourseWebhook({ eventType, headers, payload }) {
+    const query = `
       INSERT INTO discourse_webhooks (event_type, headers, payload)
       VALUES ($1, $2, $3)
-      `,
-      [eventType, headers, payload]
+    `;
+
+    await executeQuery(
+      query,
+      [eventType, headers, payload],
+      { label: "insert_discourse_webhook" }
     );
   }
 }
