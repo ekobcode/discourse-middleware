@@ -12,8 +12,8 @@ services:
       TZ: Asia/Jakarta
       DB_HOST: postgres-db
       DB_PORT: 5432
-      DB_USER: avanger
-      DB_PASSWORD: 'AvAngeR717#'
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: '${{ secrets.DB_PASSWORD }}'
       DB_NAME: discourse_webhook
     networks:
       - local_network
