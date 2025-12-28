@@ -1,0 +1,9 @@
+const express = require("express");
+const router = express.Router();
+const webhookController = require("./controllers/webhook.controller");
+
+router.post("/webhook/discourse", (req, res) =>
+  webhookController.receiveDiscourse(req, res)
+);
+
+module.exports = router;

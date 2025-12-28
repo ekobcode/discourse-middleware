@@ -1,0 +1,20 @@
+name: Trigger Jenkins
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  trigger-jenkins:
+    runs-on: ubuntu-latest
+
+    env:
+      SERVICE_NAME: ${{ vars.SERVICE_NAME }}
+      JENKINS_JOB_URL: ${{ vars.JENKINS_JOB_URL }}
+
+    steps:
+      - name: Trigger Jenkins Build
+        run: |
+          curl --fail --location \
+            "${JENKINS_JOB_URL}?token=${{ secrets.JENKINS_TOKEN }}&SERVICE_NAME=${SERVICE_NAME}" \
+            --header "Authorization: Basic ${{ secrets.JENKINS_BASIC_AUTH }}"
