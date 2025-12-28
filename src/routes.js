@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const webhookController = require("./controllers/webhook.controller");
+const discourseSignatureMiddleware = require("./middlewares/discourseSignature.middleware");
 
-router.post("/webhook/discourse", (req, res) =>
+
+router.post("/webhook/discourse", discourseSignatureMiddleware , (req, res) =>
   webhookController.receiveDiscourse(req, res)
 );
 
